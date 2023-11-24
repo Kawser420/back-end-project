@@ -11,7 +11,7 @@ export interface User {
   age: number;
   email: string;
   isActive: boolean;
-  hobbies: ['codding,', 'movies', 'football', 'cricket'];
+  hobbies: 'codding,' | 'movies' | 'football' | 'cricket';
   address: {
     street: string;
     city: string;
@@ -20,6 +20,6 @@ export interface User {
   orders: {
     productName: string;
     price: number;
-    quantity: [1, 10, 8, 33];
+    quantity: 1 | 10 | 8 | 33;
   };
 }
