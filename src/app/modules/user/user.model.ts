@@ -1,6 +1,21 @@
 import { Schema, model } from 'mongoose';
 import { User } from './user.interface';
 
+const orderSchema = new Schema({
+  productName: {
+    type: String,
+    required: [true, 'productName is required'],
+  },
+  price: {
+    type: Number,
+    required: [true, 'price is required'],
+  },
+  quantity: {
+    type: Number,
+    required: [true, 'quantity is required'],
+  },
+});
+
 const userSchema = new Schema<User>({
   userId: {
     type: Number,
@@ -30,7 +45,7 @@ const userSchema = new Schema<User>({
   },
   age: {
     type: Number,
-    required: [true, 'age is a required'],
+    required: [true, 'age is required'],
   },
   email: {
     type: String,
@@ -39,12 +54,11 @@ const userSchema = new Schema<User>({
   },
   isActive: {
     type: Boolean,
-    required: [true, 'isActive required'],
+    required: [true, 'isActive is required'],
   },
   hobbies: {
-    type: String,
-    enum: ['codding', 'movies', 'football', 'cricket'],
-    required: [true, 'Hobbits is required'],
+    type: [String],
+    required: [true, 'Hobbies is required'],
   },
   address: {
     street: {
@@ -54,7 +68,7 @@ const userSchema = new Schema<User>({
     },
     city: {
       type: String,
-      required: [true, 'city is a required'],
+      required: [true, 'city is required'],
       trim: true,
     },
     country: {
@@ -63,24 +77,9 @@ const userSchema = new Schema<User>({
       trim: true,
     },
   },
-  orders: {
-    productName: {
-      type: String,
-      required: [true, 'Product is a required'],
-      trim: true,
-    },
-    price: {
-      type: Number,
-      required: [true, 'price is required'],
-    },
-    quantity: {
-      type: Number,
-      enum: [1, 10, 8, 33],
-      required: [true, 'Quantity is required'],
-    },
-  },
+  orders: [orderSchema],
 });
 
-const User = model<User>('User', userSchema);
+const UserModel = model<User>('User', userSchema);
 
-export default User;
+export default UserModel;

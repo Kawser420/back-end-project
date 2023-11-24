@@ -1,6 +1,6 @@
-// import { Schema, model, connect } from 'mongoose';
+import { Document } from 'mongoose';
 
-export interface User {
+export interface User extends Document {
   userId: number;
   username: string;
   password: string;
@@ -11,15 +11,17 @@ export interface User {
   age: number;
   email: string;
   isActive: boolean;
-  hobbies: 'codding,' | 'movies' | 'football' | 'cricket';
+  hobbies: ('coding' | 'movies' | 'football' | 'cricket')[];
   address: {
     street: string;
     city: string;
     country: string;
   };
-  orders: {
-    productName: string;
-    price: number;
-    quantity: 1 | 10 | 8 | 33;
-  };
+  orders: Order[];
+}
+
+export interface Order {
+  productName: string;
+  price: number;
+  quantity: number;
 }
