@@ -30,10 +30,43 @@ const deleteUser = async (userId: string) => {
   return deleteResult.deletedCount > 0;
 };
 
+const addProductToOrder = async (
+  userId: string,
+  productName: string,
+  price: number,
+  quantity: number,
+) => {
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    if (!user.orders) {
+      user.orders = [];
+    }
+
+    const newProduct = {
+      productName,
+      price,
+      quantity,
+    };
+
+    user.orders.push(newProduct);
+    await user.save();
+    return user;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const UserServices = {
   createUserInToDB,
   getAllUsersFromDB,
   getSingleUsersFromDB,
   getUpdateUsersFromDB,
   deleteUser,
+  addProductToOrder,
 };

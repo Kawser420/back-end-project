@@ -18,4 +18,7 @@ router.put('/api/users/:userId', UserControllers.getUpdateUsers);
 //Endpoint: DELETE /api/users/:userId
 router.delete('/api/users/:userId', UserControllers.deleteUser);
 
+//Endpoint: PUT /api/users/:userId/orders
+router.put('/api/users/:userId/orders', UserControllers.addProductToOrder);
+
 export const UserRoutes = router;
