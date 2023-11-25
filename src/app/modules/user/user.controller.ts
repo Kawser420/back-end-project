@@ -29,7 +29,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     //send response
     res.status(200).json({
       success: true,
-      message: 'User:id are retrieved successfully',
+      message: 'Users fetched successfully!',
       data: result,
     });
   } catch (error) {
@@ -50,8 +50,37 @@ const getSingleUsers = async (req: Request, res: Response) => {
     //send response
     res.status(200).json({
       success: true,
-      message: 'Get a Single User Id are retrieved successfully',
+      message: 'User fetched successfully!',
       data: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User no found!',
+      },
+    });
+  }
+};
+
+const getUpdateUsers = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const updatedUserData = req.body.user;
+
+    const updatedUserResult = await UserServices.getUpdateUsersFromDB(
+      userId,
+      updatedUserData,
+    );
+
+    //send response
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: updatedUserResult,
     });
   } catch (error) {
     console.log(error);
@@ -70,4 +99,5 @@ export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUsers,
+  getUpdateUsers,
 };

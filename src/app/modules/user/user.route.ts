@@ -12,4 +12,7 @@ router.get('/', UserControllers.getAllUsers);
 //Endpoint: GET /api/users/:userId
 router.get('/:userId', UserControllers.getSingleUsers);
 
+//Endpoint: PUT /api/users/:userId
+router.put('/api/users/:userId', UserControllers.getUpdateUsers);
+
 export const UserRoutes = router;
