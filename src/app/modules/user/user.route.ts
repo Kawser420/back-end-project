@@ -9,4 +9,7 @@ router.post('/api/users', UserControllers.createUser);
 //Endpoint: GET /api/users
 router.get('/', UserControllers.getAllUsers);
 
+//Endpoint: GET /api/users/:userId
+router.get('/:userId', UserControllers.getSingleUsers);
+
 export const UserRoutes = router;
