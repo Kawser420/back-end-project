@@ -24,4 +24,10 @@ router.put('/api/users/:userId/orders', UserControllers.addProductToOrder);
 // Endpoint: GET /api/users/:userId/orders
 router.get('/api/users/:userId/orders', UserControllers.getAllOrders);
 
+//Endpoint: GET /api/users/:userId/orders
+router.get(
+  '/api/users/:userId/orders/total-price',
+  UserControllers.calculateTotalPrice,
+);
+
 export const UserRoutes = router;

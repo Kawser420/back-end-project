@@ -79,7 +79,7 @@ const getUpdateUsers = async (req: Request, res: Response) => {
     //send response
     res.status(200).json({
       success: true,
-      message: 'User fetched successfully!',
+      message: 'User updated successfully!',
       data: updatedUserResult,
     });
   } catch (error) {
@@ -120,30 +120,6 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-const getAllOrders = async (req: Request, res: Response) => {
-  try {
-    const userId = req.params.userId;
-
-    const orders = await UserServices.getAllOrders(userId);
-    //send response
-    res.status(200).json({
-      success: true,
-      message: 'User fetched successfully!',
-      data: orders,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: 'User not found',
-      error: {
-        code: 404,
-        description: 'User no found!',
-      },
-    });
-  }
-};
-
 const addProductToOrder = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
@@ -159,8 +135,56 @@ const addProductToOrder = async (req: Request, res: Response) => {
     //send response
     res.status(200).json({
       success: true,
-      message: 'User fetched successfully!',
+      message: 'Order created successfully!',
       data: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User no found!',
+      },
+    });
+  }
+};
+
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+
+    const orders = await UserServices.getAllOrders(userId);
+    //send response
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User no found!',
+      },
+    });
+  }
+};
+
+const calculateTotalPrice = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+
+    const totalPrice = await UserServices.calculateTotalPrice(userId);
+    //send response
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated Successfully!!',
+      data: totalPrice,
     });
   } catch (error) {
     console.log(error);
@@ -183,4 +207,5 @@ export const UserControllers = {
   deleteUser,
   addProductToOrder,
   getAllOrders,
+  calculateTotalPrice,
 };

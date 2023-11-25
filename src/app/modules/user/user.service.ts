@@ -92,6 +92,29 @@ const addProductToOrder = async (
 };
 //
 
+//
+const calculateTotalPrice = async (userId: string) => {
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    const orders = user.orders || [];
+
+    let totalPrice = 0;
+
+    for (const order of orders) {
+      totalPrice += order.price * order.quantity;
+    }
+    return totalPrice;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const UserServices = {
   createUserInToDB,
   getAllUsersFromDB,
@@ -100,4 +123,5 @@ export const UserServices = {
   deleteUser,
   addProductToOrder,
   getAllOrders,
+  calculateTotalPrice,
 };
