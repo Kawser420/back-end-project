@@ -12,8 +12,10 @@ app.use(cors());
 app.use('/api/v1/users', UserRoutes);
 
 const getAController = (req: Request, res: Response) => {
-  const num = 1000;
-  res.send(num);
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to the API of back-end-project',
+  });
 };
 
 app.get('/', getAController);
