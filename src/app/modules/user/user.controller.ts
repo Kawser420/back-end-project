@@ -120,6 +120,30 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+
+    const orders = await UserServices.getAllOrders(userId);
+    //send response
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User no found!',
+      },
+    });
+  }
+};
+
 const addProductToOrder = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
@@ -158,4 +182,5 @@ export const UserControllers = {
   getUpdateUsers,
   deleteUser,
   addProductToOrder,
+  getAllOrders,
 };

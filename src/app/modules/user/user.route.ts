@@ -21,4 +21,7 @@ router.delete('/api/users/:userId', UserControllers.deleteUser);
 //Endpoint: PUT /api/users/:userId/orders
 router.put('/api/users/:userId/orders', UserControllers.addProductToOrder);
 
+// Endpoint: GET /api/users/:userId/orders
+router.get('/api/users/:userId/orders', UserControllers.getAllOrders);
+
 export const UserRoutes = router;

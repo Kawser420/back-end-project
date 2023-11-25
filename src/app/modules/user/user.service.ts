@@ -1,21 +1,28 @@
 import { User } from './user.interface';
 import UserModel from './user.model';
 
+//
 const createUserInToDB = async (user: User) => {
   const result = await UserModel.create(user);
   return result;
 };
+//
 
+//
 const getAllUsersFromDB = async () => {
   const result = await UserModel.find();
   return result;
 };
+//
 
+//
 const getSingleUsersFromDB = async (id: string) => {
   const result = await UserModel.findOne({ id });
   return result;
 };
+//
 
+//
 const getUpdateUsersFromDB = async (userId: string, updatedUserData: User) => {
   const updateResult = await UserModel.findOneAndUpdate(
     { id: userId },
@@ -24,12 +31,34 @@ const getUpdateUsersFromDB = async (userId: string, updatedUserData: User) => {
   );
   return updateResult;
 };
+//
 
+//
 const deleteUser = async (userId: string) => {
   const deleteResult = await UserModel.deleteOne({ id: userId });
   return deleteResult.deletedCount > 0;
 };
+//
 
+//
+const getAllOrders = async (userId: string) => {
+  try {
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return null;
+    }
+
+    const orders = user.orders || [];
+
+    return orders;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+//
 const addProductToOrder = async (
   userId: string,
   productName: string,
@@ -61,6 +90,7 @@ const addProductToOrder = async (
     return null;
   }
 };
+//
 
 export const UserServices = {
   createUserInToDB,
@@ -69,4 +99,5 @@ export const UserServices = {
   getUpdateUsersFromDB,
   deleteUser,
   addProductToOrder,
+  getAllOrders,
 };
