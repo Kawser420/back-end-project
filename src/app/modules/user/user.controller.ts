@@ -2,12 +2,10 @@ import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import userValidationSchema from './user.validation';
 
-// import userValidationSchema from './user.joi.validation';
-
+//
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
-    // const { error } = userValidationSchema.validate(userData);
 
     // create validation using zod
     const zodParsedData = userValidationSchema.parse(userData);
@@ -32,6 +30,9 @@ const createUser = async (req: Request, res: Response) => {
     });
   }
 };
+//
+
+//
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsersFromDB();
@@ -73,7 +74,9 @@ const getAllUsers = async (req: Request, res: Response) => {
     });
   }
 };
+//
 
+//
 const getSingleUsers = async (req: Request, res: Response) => {
   try {
     const userId: number = parseInt(req.params.userId, 10);
@@ -99,7 +102,9 @@ const getSingleUsers = async (req: Request, res: Response) => {
     });
   }
 };
+//
 
+//
 const getUpdateUsers = async (req: Request, res: Response) => {
   try {
     const userId: number = parseInt(req.params.userId, 10);
@@ -130,7 +135,9 @@ const getUpdateUsers = async (req: Request, res: Response) => {
     });
   }
 };
+//
 
+//
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId: number = parseInt(req.params.userId);
@@ -159,10 +166,90 @@ const deleteUser = async (req: Request, res: Response) => {
 };
 //
 
+//
+const productOrder = async (req: Request, res: Response) => {
+  try {
+    const userId: number = parseInt(req.params.userId, 10);
+    const orderData = req.body;
+
+    await UserServices.addProductToOrder(userId, orderData);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: null,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User no found!',
+      },
+    });
+  }
+};
+//
+
+//
+const allOrders = async (req: Request, res: Response) => {
+  try {
+    const userId: number = parseInt(req.params.userId, 10);
+    const result = await UserServices.getAllOrders(userId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully!',
+      data: { orders: result },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User no found!',
+      },
+    });
+  }
+};
+//
+
+//
+const totalPrice = async (req: Request, res: Response) => {
+  try {
+    const userId: number = parseInt(req.params.userId, 10);
+    const result = await UserServices.getTotalPrice(userId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: { totalPrice: result },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'User price not found',
+      error: {
+        code: 404,
+        description: 'User price no found!',
+      },
+    });
+  }
+};
+//
+
 export const UserControllers = {
   createUser,
   getAllUsers,
   getSingleUsers,
   getUpdateUsers,
   deleteUser,
+  productOrder,
+  allOrders,
+  totalPrice,
 };

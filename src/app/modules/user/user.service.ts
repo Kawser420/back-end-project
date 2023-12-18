@@ -83,6 +83,58 @@ const deleteUserFromDB = async (userId: number) => {
 //
 
 //
+const addProductToOrder = async (
+  userId: number,
+  orderData: { productName: string; price: number; quantity: number },
+): Promise<void> => {
+  if (isNaN(userId)) {
+    throw new Error('Invalid userId.');
+  }
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!user.orders) {
+      user.orders = [];
+    }
+    user.orders.push(orderData);
+    await user.save();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+//
+
+//
+
+const getAllOrders = async (userId: number): Promise<Array<unknown>> => {
+  const user = await User.findOne({ userId });
+  if (!user) {
+    throw new Error('User not found');
+  }
+  return user.orders || [];
+};
+//
+
+//
+const getTotalPrice = async (userId: number): Promise<number> => {
+  const user = await User.findOne({ userId });
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  let totalPrice = 0;
+
+  for (const order of user.orders || []) {
+    totalPrice += order.price * order.quantity;
+  }
+
+  return totalPrice;
+};
 
 export const UserServices = {
   createUserInToDB,
@@ -90,4 +142,7 @@ export const UserServices = {
   getSingleUsersFromDB,
   getUpdateUsersFromDB,
   deleteUserFromDB,
+  addProductToOrder,
+  getAllOrders,
+  getTotalPrice,
 };

@@ -7,7 +7,7 @@ const orderValidationSchema = z.object({
 });
 
 const userValidationSchema = z.object({
-  userId: z.number(),
+  userId: z.number().positive().int(),
   username: z.string().min(1).max(30).trim(),
   password: z.string().min(1).max(20).trim(),
   fullName: z.object({
@@ -16,7 +16,7 @@ const userValidationSchema = z.object({
   }),
   age: z.number().positive().int(),
   email: z.string().email().min(3).trim(),
-  isActive: z.boolean(),
+  isActive: z.boolean().default(Boolean),
   hobbies: z.array(z.string()).min(1),
   address: z.object({
     street: z.string().min(1).trim(),

@@ -60,7 +60,7 @@ export const userSchema = new Schema<TUser, UserModel>(
     },
     isActive: {
       type: Boolean,
-      default: true,
+      default: Boolean,
     },
     hobbies: {
       type: [String],
@@ -120,7 +120,7 @@ userSchema.post('save', function (doc, next) {
 });
 
 //  Retrieve a specific user by ID & use static method
-userSchema.statics.findByUserId = function (userId, projection) {
+userSchema.statics.findById = function (userId, projection) {
   return this.findOne({ userId }, projection);
 };
 
@@ -131,7 +131,5 @@ userSchema.statics.isUserIdExists = async function (
 ) {
   return this.findOne({ userId, username });
 };
-
-// here is Orders in static method
 
 export const User = model<TUser, UserModel>('User', userSchema);
