@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 // application routes
-app.use('/api/v1/users', UserRoutes);
+app.use('/api/users', UserRoutes);
 
 const getAController = (req: Request, res: Response) => {
   res.status(200).json({
@@ -18,6 +18,7 @@ const getAController = (req: Request, res: Response) => {
   });
 };
 
+// controllers
 app.get('/', getAController);
 
 export default app;

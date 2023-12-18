@@ -1,31 +1,70 @@
-import { User } from './user.interface';
-import UserModel from './user.model';
+import { TUser } from './user.interface';
+import { User } from './user.model';
 
 //
-const createUserInToDB = async (user: User) => {
-  const result = await UserModel.create(user);
+const createUserInToDB = async (userData: TUser) => {
+  // build in static method in userId & userName
+  if (await User.isUserIdExists(userData.userId, userData.username)) {
+    throw new Error('User already exists!');
+  }
+
+  const result = await User.create(userData);
   return result;
 };
 //
 
 //
 const getAllUsersFromDB = async () => {
-  const result = await UserModel.find();
+  // here is requirement: username, fullName, age, email, address
+  const result = await User.find(
+    {},
+    {
+      username: 1,
+      'fullName.firstName': 1,
+      'fullName.lastName': 1,
+      age: 1,
+      email: 1,
+      'address.street': 1,
+      'address.city': 1,
+      'address.country': 1,
+      orders: 1,
+    },
+  );
+
   return result;
 };
 //
 
 //
-const getSingleUsersFromDB = async (id: string) => {
-  const result = await UserModel.findOne({ id });
-  return result;
+const getSingleUsersFromDB = async (userId: number) => {
+  try {
+    const user = await User.findByUserId(userId, {
+      userId: 1,
+      username: 1,
+      'fullName.firstName': 1,
+      'fullName.lastName': 1,
+      age: 1,
+      email: 1,
+      isActive: 1,
+      hobbies: 1,
+      'address.street': 1,
+      'address.city': 1,
+      'address.country': 1,
+    });
+
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 //
 
 //
-const getUpdateUsersFromDB = async (userId: string, updatedUserData: User) => {
-  const updateResult = await UserModel.findOneAndUpdate(
-    { id: userId },
+const getUpdateUsersFromDB = async (userId: number, updatedUserData: TUser) => {
+  // update filed
+  const updateResult = await User.findOneAndUpdate(
+    { userId },
     updatedUserData,
     { new: true },
   );
@@ -34,94 +73,17 @@ const getUpdateUsersFromDB = async (userId: string, updatedUserData: User) => {
 //
 
 //
-const deleteUser = async (userId: string) => {
-  const deleteResult = await UserModel.deleteOne({ id: userId });
+const deleteUserFromDB = async (userId: number) => {
+  const deleteResult = await User.deleteOne({ userId: userId });
   return deleteResult.deletedCount > 0;
 };
 //
-
-//
-const getAllOrders = async (userId: string) => {
-  try {
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      return null;
-    }
-
-    const orders = user.orders || [];
-
-    return orders;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-};
-
-//
-const addProductToOrder = async (
-  userId: string,
-  productName: string,
-  price: number,
-  quantity: number,
-) => {
-  try {
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      return null;
-    }
-
-    if (!user.orders) {
-      user.orders = [];
-    }
-
-    const newProduct = {
-      productName,
-      price,
-      quantity,
-    };
-
-    user.orders.push(newProduct);
-    await user.save();
-    return user;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-};
-//
-
-//
-const calculateTotalPrice = async (userId: string) => {
-  try {
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      return null;
-    }
-
-    const orders = user.orders || [];
-
-    let totalPrice = 0;
-
-    for (const order of orders) {
-      totalPrice += order.price * order.quantity;
-    }
-    return totalPrice;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-};
 
 export const UserServices = {
   createUserInToDB,
   getAllUsersFromDB,
   getSingleUsersFromDB,
   getUpdateUsersFromDB,
-  deleteUser,
-  addProductToOrder,
-  getAllOrders,
-  calculateTotalPrice,
+  deleteUserFromDB,
+  // orderToUser,
 };

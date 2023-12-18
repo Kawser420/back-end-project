@@ -1,6 +1,12 @@
-import { Document } from 'mongoose';
+import { Model } from 'mongoose';
 
-export interface User extends Document {
+export type TOrder = {
+  productName: string;
+  price: number;
+  quantity: number;
+};
+
+export type TUser = {
   userId: number;
   username: string;
   password: string;
@@ -11,17 +17,21 @@ export interface User extends Document {
   age: number;
   email: string;
   isActive: boolean;
-  hobbies: ('coding' | 'movies' | 'football' | 'cricket')[];
+  hobbies: string[];
   address: {
     street: string;
     city: string;
     country: string;
   };
-  orders: Order[];
-}
+  orders: TOrder[];
+};
 
-export interface Order {
-  productName: string;
-  price: number;
-  quantity: number;
+// for creating static ---->
+export interface UserModel extends Model<TUser> {
+  isUserIdExists(userId: number, username: string): Promise<TUser | null>;
+  findByUserId(
+    userId: number,
+    projection?: Record<string, any>,
+  ): Promise<TUser | null>;
+  // addProductToOrder(userId: number, orderData: TOrder): Promise<null>;
 }

@@ -3,31 +3,28 @@ import { UserControllers } from './user.controller';
 
 const router = express.Router();
 
-//Endpoint: POST /api/users
-router.post('/api/users', UserControllers.createUser);
+// Create POST
+router.post('/', UserControllers.createUser);
 
-//Endpoint: GET /api/users
+// GET All Users
 router.get('/', UserControllers.getAllUsers);
 
-//Endpoint: GET /api/users/:userId
+//Endpoint: GET specific /:userId
 router.get('/:userId', UserControllers.getSingleUsers);
 
-//Endpoint: PUT /api/users/:userId
-router.put('/api/users/:userId', UserControllers.getUpdateUsers);
+//Endpoint: PUT /:userId
+router.put('/:userId', UserControllers.getUpdateUsers);
 
-//Endpoint: DELETE /api/users/:userId
-router.delete('/api/users/:userId', UserControllers.deleteUser);
+//Endpoint: DELETE /:userId
+router.delete('/:userId', UserControllers.deleteUser);
 
-//Endpoint: PUT /api/users/:userId/orders
-router.put('/api/users/:userId/orders', UserControllers.addProductToOrder);
+// //Orders PUT /:userId/orders
+// router.put('/:userId/orders', UserControllers.orderToUser);
 
-// Endpoint: GET /api/users/:userId/orders
-router.get('/api/users/:userId/orders', UserControllers.getAllOrders);
+// // Endpoint: GET /:userId/orders
+// router.get('/:userId/orders', UserControllers.getAllOrders);
 
-//Endpoint: GET /api/users/:userId/orders
-router.get(
-  '/api/users/:userId/orders/total-price',
-  UserControllers.calculateTotalPrice,
-);
+// //Endpoint: GET /api/users/:userId/orders
+// router.get('/:userId/orders/total-price', UserControllers.calculateTotalPrice);
 
 export const UserRoutes = router;
