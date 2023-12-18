@@ -14,7 +14,7 @@ app.use('/api/users', UserRoutes);
 const getAController = (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
-    message: 'Welcome to the API of back-end-project',
+    message: 'Welcome To The API back-end-project',
   });
 };
 
