@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 import userValidationSchema from './user.validation';
+
 // import userValidationSchema from './user.joi.validation';
 
 const createUser = async (req: Request, res: Response) => {

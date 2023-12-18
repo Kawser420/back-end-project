@@ -29,9 +29,4 @@ export type TUser = {
 // for creating static ---->
 export interface UserModel extends Model<TUser> {
   isUserIdExists(userId: number, username: string): Promise<TUser | null>;
-  findByUserId(
-    userId: number,
-    projection?: Record<string, any>,
-  ): Promise<TUser | null>;
-  // addProductToOrder(userId: number, orderData: TOrder): Promise<null>;
 }

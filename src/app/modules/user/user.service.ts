@@ -36,21 +36,24 @@ const getAllUsersFromDB = async () => {
 //
 
 //
-const getSingleUsersFromDB = async (userId: number) => {
+const getSingleUsersFromDB = async (userId: number): Promise<TUser | null> => {
   try {
-    const user = await User.findByUserId(userId, {
-      userId: 1,
-      username: 1,
-      'fullName.firstName': 1,
-      'fullName.lastName': 1,
-      age: 1,
-      email: 1,
-      isActive: 1,
-      hobbies: 1,
-      'address.street': 1,
-      'address.city': 1,
-      'address.country': 1,
-    });
+    const user = await User.findOne(
+      { userId },
+      {
+        userId: 1,
+        username: 1,
+        'fullName.firstName': 1,
+        'fullName.lastName': 1,
+        age: 1,
+        email: 1,
+        isActive: 1,
+        hobbies: 1,
+        'address.street': 1,
+        'address.city': 1,
+        'address.country': 1,
+      },
+    );
 
     return user;
   } catch (error) {
@@ -79,11 +82,12 @@ const deleteUserFromDB = async (userId: number) => {
 };
 //
 
+//
+
 export const UserServices = {
   createUserInToDB,
   getAllUsersFromDB,
   getSingleUsersFromDB,
   getUpdateUsersFromDB,
   deleteUserFromDB,
-  // orderToUser,
 };

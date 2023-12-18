@@ -133,25 +133,5 @@ userSchema.statics.isUserIdExists = async function (
 };
 
 // here is Orders in static method
-// userSchema.statics.addProductToOrder = async function (userId, orderData) {
-//   const user = await this.findOne({ userId });
-
-//   if (!user) {
-//     throw new Error('User not found');
-//   }
-
-//   if (!user.orders) {
-//     user.orders = [];
-//   }
-
-//   user.orders.push({
-//     productName: orderData.productName,
-//     price: orderData.price,
-//     quantity: orderData.quantity,
-//   });
-
-//   await user.save();
-//   return null;
-// };
 
 export const User = model<TUser, UserModel>('User', userSchema);
