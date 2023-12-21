@@ -5,7 +5,7 @@ import userValidationSchema from './user.validation';
 //
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const userData = req.body;
 
     // create validation using zod
     const zodParsedData = userValidationSchema.parse(userData);
@@ -108,7 +108,7 @@ const getSingleUsers = async (req: Request, res: Response) => {
 const getUpdateUsers = async (req: Request, res: Response) => {
   try {
     const userId: number = parseInt(req.params.userId, 10);
-    const updatedUserData = req.body.user;
+    const updatedUserData = req.body;
 
     const updatedUserResult = await UserServices.getUpdateUsersFromDB(
       userId,
@@ -167,21 +167,25 @@ const deleteUser = async (req: Request, res: Response) => {
 //
 
 //
-const productOrder = async (req: Request, res: Response) => {
+const addProductOrder = async (req: Request, res: Response) => {
   try {
     const userId: number = parseInt(req.params.userId, 10);
-    const orderData = req.body;
+    const { productName, price, quantity } = req.body;
 
-    await UserServices.addProductToOrder(userId, orderData);
+    await UserServices.addProductToUserData(userId, {
+      productName,
+      price,
+      quantity,
+    });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Order created successfully!',
       data: null,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'User not found',
       error: {
@@ -249,7 +253,7 @@ export const UserControllers = {
   getSingleUsers,
   getUpdateUsers,
   deleteUser,
-  productOrder,
+  addProductOrder,
   allOrders,
   totalPrice,
 };

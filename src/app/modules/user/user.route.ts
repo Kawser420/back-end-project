@@ -19,7 +19,7 @@ router.put('/:userId', UserControllers.getUpdateUsers);
 router.delete('/:userId', UserControllers.deleteUser);
 
 // orders
-router.put('/:userId/orders', UserControllers.productOrder);
+router.put('/:userId/orders', UserControllers.addProductOrder);
 
 // all orders
 router.get('/:userId/orders', UserControllers.allOrders);

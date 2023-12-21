@@ -3,9 +3,14 @@ import { User } from './user.model';
 
 //
 const createUserInToDB = async (userData: TUser) => {
-  // build in static method in userId & userName
-  if (await User.isUserIdExists(userData.userId, userData.username)) {
-    throw new Error('User already exists!');
+  // build in static method in userId
+  if (await User.isUserIdExists(userData.userId)) {
+    throw new Error('userId already exists!');
+  }
+
+  // build in static method in userName
+  if (await User.isUserNameExists(userData.username)) {
+    throw new Error('username already exists!');
   }
 
   const result = await User.create(userData);
@@ -83,7 +88,7 @@ const deleteUserFromDB = async (userId: number) => {
 //
 
 //
-const addProductToOrder = async (
+const addProductToUserData = async (
   userId: number,
   orderData: { productName: string; price: number; quantity: number },
 ): Promise<void> => {
@@ -142,7 +147,7 @@ export const UserServices = {
   getSingleUsersFromDB,
   getUpdateUsersFromDB,
   deleteUserFromDB,
-  addProductToOrder,
+  addProductToUserData,
   getAllOrders,
   getTotalPrice,
 };

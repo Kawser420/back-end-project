@@ -124,12 +124,14 @@ userSchema.statics.findById = function (userId, projection) {
   return this.findOne({ userId }, projection);
 };
 
-// creating a static method in userId and username
-userSchema.statics.isUserIdExists = async function (
-  userId: number,
-  username: string,
-) {
-  return this.findOne({ userId, username });
+// creating a static method in userId
+userSchema.statics.isUserIdExists = async function (userId: number) {
+  return this.findOne({ userId });
+};
+
+// creating a static method in username
+userSchema.statics.isUserNameExists = async function (username: string) {
+  return this.findOne({ username });
 };
 
 export const User = model<TUser, UserModel>('User', userSchema);
