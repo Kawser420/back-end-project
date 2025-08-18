@@ -18,7 +18,7 @@ const getAController = (req: Request, res: Response) => {
   });
 };
 
-// controllers
+// Controllers
 app.get('/', getAController);
 
 export default app;
