@@ -1,26 +1,22 @@
-import { TUser } from './user.interface';
+import { TOrder, TUser } from './user.interface';
 import { User } from './user.model';
 
-//
 const createUserInToDB = async (userData: TUser) => {
-  // build in static method in userId
-  if (await User.isUserIdExists(userData.userId)) {
+  const existingUserId = await User.isUserIdExists(userData.userId);
+  if (existingUserId) {
     throw new Error('userId already exists!');
   }
 
-  // build in static method in userName
-  if (await User.isUserNameExists(userData.username)) {
+  const existingUsername = await User.isUserNameExists(userData.username);
+  if (existingUsername) {
     throw new Error('username already exists!');
   }
 
   const result = await User.create(userData);
   return result;
 };
-//
 
-//
 const getAllUsersFromDB = async () => {
-  // here is requirement: username, fullName, age, email, address
   const result = await User.find(
     {},
     {
@@ -35,109 +31,71 @@ const getAllUsersFromDB = async () => {
       orders: 1,
     },
   );
-
   return result;
 };
-//
 
-//
 const getSingleUsersFromDB = async (userId: number): Promise<TUser | null> => {
-  try {
-    const user = await User.findOne(
-      { userId },
-      {
-        userId: 1,
-        username: 1,
-        'fullName.firstName': 1,
-        'fullName.lastName': 1,
-        age: 1,
-        email: 1,
-        isActive: 1,
-        hobbies: 1,
-        'address.street': 1,
-        'address.city': 1,
-        'address.country': 1,
-      },
-    );
-
-    return user;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
-//
-
-//
-const getUpdateUsersFromDB = async (userId: number, updatedUserData: TUser) => {
-  // update filed
-  const updateResult = await User.findOneAndUpdate(
+  const user = await User.findOne(
     { userId },
-    updatedUserData,
-    { new: true },
+    {
+      userId: 1,
+      username: 1,
+      fullName: 1,
+      age: 1,
+      email: 1,
+      isActive: 1,
+      hobbies: 1,
+      address: 1,
+    },
   );
-  return updateResult;
+  return user;
 };
-//
 
-//
+const getUpdateUsersFromDB = async (
+  userId: number,
+  updatedUserData: Partial<TUser>,
+) => {
+  const user = await User.findOneAndUpdate({ userId }, updatedUserData, {
+    new: true,
+    runValidators: true,
+  });
+  return user;
+};
+
 const deleteUserFromDB = async (userId: number) => {
-  const deleteResult = await User.deleteOne({ userId: userId });
+  const deleteResult = await User.deleteOne({ userId });
   return deleteResult.deletedCount > 0;
 };
-//
 
-//
 const addProductToUserData = async (
   userId: number,
-  orderData: { productName: string; price: number; quantity: number },
-): Promise<void> => {
-  if (isNaN(userId)) {
-    throw new Error('Invalid userId.');
-  }
-  try {
-    const user = await User.findOne({ userId });
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    if (!user.orders) {
-      user.orders = [];
-    }
-    user.orders.push(orderData);
-    await user.save();
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  orderData: TOrder,
+): Promise<TUser | null> => {
+  const user = await User.findOneAndUpdate(
+    { userId },
+    { $push: { orders: orderData } },
+    { new: true, runValidators: true },
+  );
+  return user;
 };
-//
 
-//
-
-const getAllOrders = async (userId: number): Promise<Array<unknown>> => {
+const getAllOrders = async (userId: number) => {
   const user = await User.findOne({ userId });
   if (!user) {
-    throw new Error('User not found');
+    return null;
   }
   return user.orders || [];
 };
-//
 
-//
-const getTotalPrice = async (userId: number): Promise<number> => {
+const getTotalPrice = async (userId: number): Promise<number | null> => {
   const user = await User.findOne({ userId });
   if (!user) {
-    throw new Error('User not found');
+    return null;
   }
-
-  let totalPrice = 0;
-
-  for (const order of user.orders || []) {
-    totalPrice += order.price * order.quantity;
-  }
-
+  const totalPrice = (user.orders || []).reduce(
+    (acc, order) => acc + order.price * order.quantity,
+    0,
+  );
   return totalPrice;
 };
 

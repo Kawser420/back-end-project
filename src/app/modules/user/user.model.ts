@@ -36,6 +36,7 @@ export const userSchema = new Schema<TUser, UserModel>(
       type: String,
       required: [true, 'password is required'],
       trim: true,
+      select: false,
     },
     fullName: {
       firstName: {
@@ -60,7 +61,7 @@ export const userSchema = new Schema<TUser, UserModel>(
     },
     isActive: {
       type: Boolean,
-      default: Boolean,
+      default: true,
     },
     hobbies: {
       type: [String],
@@ -83,12 +84,14 @@ export const userSchema = new Schema<TUser, UserModel>(
         trim: true,
       },
     },
-    orders: [orderSchema],
+    orders: {
+      type: [orderSchema],
+      default: [],
+    },
   },
   {
     toJSON: {
       transform: function (doc, ret) {
-        delete ret.orders;
         delete ret.password;
         return ret;
       },
@@ -99,9 +102,7 @@ export const userSchema = new Schema<TUser, UserModel>(
 // middleware and password----> bcrypt and hash
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; // doc
-
-  // hashing password and save into DB
+  const user = this;
   if (!user.isModified('password')) {
     return next();
   }
@@ -112,17 +113,6 @@ userSchema.pre('save', async function (next) {
   user.password = hashedPassword;
   next();
 });
-
-// post-->password is ----> ''
-userSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
-
-//  Retrieve a specific user by ID & use static method
-userSchema.statics.findById = function (userId, projection) {
-  return this.findOne({ userId }, projection);
-};
 
 // creating a static method in userId
 userSchema.statics.isUserIdExists = async function (userId: number) {
